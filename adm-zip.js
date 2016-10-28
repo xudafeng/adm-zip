@@ -378,14 +378,18 @@ module.exports = function(/*String*/input) {
 
             _zip.entries.forEach(function(entry) {
                 if (entry.isDirectory) {
-                    Utils.makeDir(pth.resolve(targetPath, entry.entryName.toString()));
+                    var entryName = entry.entryName.toString();
+                    if (entryName[0] === '/') {
+                        entryName = entry.entryName.toString().slice(1);
+                    }
+                    Utils.makeDir(pth.resolve(targetPath, entryName));
                     return;
                 }
                 var content = entry.getData();
                 if (!content) {
                     throw Utils.Errors.CANT_EXTRACT_FILE + "2";
                 }
-                Utils.writeFileTo(pth.resolve(targetPath, entry.entryName.toString()), content, overwrite);
+                Utils.writeFileTo(pth.resolve(targetPath, entry.entryName.toString().slice(1)), content, overwrite);
             })
         },
 
